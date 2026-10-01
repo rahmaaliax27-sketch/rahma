@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>StockFlow - Manajemen Stok</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">📦</div>
+            <div>
+                <h2>Stock<span>Flow</span></h2>
+                <small>STOCK MANAGEMENT</small>
+            </div>
+        </div>
+
+        <nav class="sidebar-menu">
+
+            <p class="menu-title">MENU</p>
+
+            <a href="#dashboard" class="menu-link active" data-section="dashboard">
+                <span>▦</span>
+                Dashboard
+            </a>
+
+            <a href="#barang" class="menu-link" data-section="barang">
+                <span>📦</span>
+                Data Barang
+            </a>
+
+            <a href="#transaksi" class="menu-link" data-section="transaksi">
+                <span>↔</span>
+                Transaksi
+            </a>
+
+            <a href="#riwayat" class="menu-link" data-section="riwayat">
+                <span>◷</span>
+                Riwayat
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="system-status">
+                <span class="status-dot"></span>
+                Sistem Aktif
+            </div>
+
+            <p>StockFlow v1.0</p>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <div>
+                <p class="topbar-label">STOCK MANAGEMENT SYSTEM</p>
+                <h1 id="pageTitle">Dashboard</h1>
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="date-box">
+                    <span>📅</span>
+                    <span id="currentDate"></span>
+                </div>
+
+                <div class="profile">
+                    <div class="profile-avatar">RA</div>
+
+                    <div>
+                        <strong>Rahma Alia</strong>
+                        <small>Administrator</small>
+                    </div>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =========================
+             DASHBOARD
+        ========================== -->
+        <section id="dashboard" class="content-section active-section">
+
+            <div class="welcome">
+                <div>
+                    <span class="section-tag">OVERVIEW</span>
+
+                    <h2>Selamat datang kembali, Rahma 👋</h2>
+
+                    <p>
+                        Pantau dan kelola persediaan barang dengan mudah.
+                    </p>
+                </div>
+
+                <button class="primary-button" onclick="openModal()">
+                    + Tambah Barang
+                </button>
+            </div>
+
+
+            <!-- STATISTICS -->
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon green">📦</div>
+
+                    <div>
+                        <span>JENIS BARANG</span>
+                        <strong id="totalJenis">0</strong>
+                        <small>Produk terdaftar</small>
+                    </div>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">▣</div>
+
+                    <div>
+                        <span>TOTAL STOK</span>
+                        <strong id="totalStok">0</strong>
+                        <small>Unit tersedia</small>
+                    </div>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">⚠</div>
+
+                    <div>
+                        <span>STOK MENIPIS</span>
+                        <strong id="totalMenipis">0</strong>
+                        <small>Perlu diperhatikan</small>
+                    </div>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-icon red">×</div>
+
+                    <div>
+                        <span>STOK HABIS</span>
+                        <strong id="totalHabis">0</strong>
+                        <small>Segera restock</small>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- DASHBOARD GRID -->
+            <div class="dashboard-grid">
+
+                <!-- STOK MENIPIS -->
+                <div class="panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <span class="section-tag">PERHATIAN</span>
+                            <h3>Stok Menipis</h3>
+                        </div>
+
+                        <button
+                            class="text-button"
+                            onclick="showSection('barang')">
+                            Lihat semua →
+                        </button>
+                    </div>
+
+                    <div id="lowStockList" class="low-stock-list"></div>
+
+                </div>
+
+
+                <!-- TRANSAKSI TERBARU -->
+                <div class="panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <span class="section-tag">AKTIVITAS</span>
+                            <h3>Transaksi Terbaru</h3>
+                        </div>
+
+                        <button
+                            class="text-button"
+                            onclick="showSection('riwayat')">
+                            Lihat semua →
+                        </button>
+                    </div>
+
+                    <div id="recentTransactions"></div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             DATA BARANG
+        ========================== -->
+        <section id="barang" class="content-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-tag">INVENTORY</span>
+                    <h2>Data Barang</h2>
+                    <p>Kelola seluruh barang yang tersedia.</p>
+                </div>
+
+                <button class="primary-button" onclick="openModal()">
+                    + Tambah Barang
+                </button>
+
+            </div>
+
+
+            <!-- FILTER -->
+            <div class="filter-bar">
+
+                <div class="search-box">
+                    <span>⌕</span>
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Cari nama atau kode barang..."
+                    >
+                </div>
+
+                <select id="categoryFilter">
+                    <option value="">Semua Kategori</option>
+                </select>
+
+            </div>
+
+
+            <!-- TABLE -->
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>KODE</th>
+                            <th>NAMA BARANG</th>
+                            <th>KATEGORI</th>
+                            <th>SATUAN</th>
+                            <th>HARGA</th>
+                            <th>STOK</th>
+                            <th>STATUS</th>
+                            <th>AKSI</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="barangTable"></tbody>
+
+                </table>
+
+                <div id="emptyBarang" class="empty-state">
+                    <div>📦</div>
+                    <h3>Belum ada barang</h3>
+                    <p>Tambahkan barang pertama kamu.</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             TRANSAKSI
+        ========================== -->
+        <section id="transaksi" class="content-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-tag">TRANSACTION</span>
+                    <h2>Transaksi Stok</h2>
+                    <p>Catat barang masuk dan barang keluar.</p>
+                </div>
+
+            </div>
+
+
+            <div class="transaction-grid">
+
+                <!-- BARANG MASUK -->
+                <div class="transaction-card masuk">
+
+                    <div class="transaction-icon">
+                        ↓
+                    </div>
+
+                    <div>
+                        <span>STOCK IN</span>
+                        <h3>Barang Masuk</h3>
+                        <p>
+                            Menambahkan jumlah stok barang.
+                        </p>
+                    </div>
+
+                    <button
+                        class="transaction-button"
+                        onclick="openTransactionModal('masuk')">
+                        + Barang Masuk
+                    </button>
+
+                </div>
+
+
+                <!-- BARANG KELUAR -->
+                <div class="transaction-card keluar">
+
+                    <div class="transaction-icon">
+                        ↑
+                    </div>
+
+                    <div>
+                        <span>STOCK OUT</span>
+                        <h3>Barang Keluar</h3>
+                        <p>
+                            Mengurangi jumlah stok barang.
+                        </p>
+                    </div>
+
+                    <button
+                        class="transaction-button"
+                        onclick="openTransactionModal('keluar')">
+                        − Barang Keluar
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- INFO -->
+            <div class="info-box">
+                <div>💡</div>
+
+                <div>
+                    <strong>Perhitungan stok otomatis</strong>
+
+                    <p>
+                        Stok akan bertambah ketika terjadi barang masuk
+                        dan berkurang ketika terjadi barang keluar.
+                    </p>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             RIWAYAT
+        ========================== -->
+        <section id="riwayat" class="content-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-tag">HISTORY</span>
+                    <h2>Riwayat Transaksi</h2>
+                    <p>Daftar aktivitas stok barang.</p>
+                </div>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>TANGGAL</th>
+                            <th>KODE</th>
+                            <th>BARANG</th>
+                            <th>JENIS</th>
+                            <th>JUMLAH</th>
+                            <th>STOK AKHIR</th>
+                            <th>KETERANGAN</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="historyTable"></tbody>
+
+                </table>
+
+                <div id="emptyHistory" class="empty-state">
+                    <div>◷</div>
+                    <h3>Belum ada transaksi</h3>
+                    <p>Riwayat transaksi akan muncul di sini.</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FOOTER -->
+        <footer>
+            <span>StockFlow © 2026</span>
+            <span>Inventory Management System</span>
+        </footer>
+
+    </main>
+
+
+    <!-- =========================
+         MODAL TAMBAH / EDIT BARANG
+    ========================== -->
+    <div id="barangModal" class="modal">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <div>
+                    <span class="section-tag">INVENTORY</span>
+                    <h2 id="modalTitle">Tambah Barang</h2>
+                </div>
+
+                <button class="close-button" onclick="closeModal()">
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="barangForm">
+
+                <input type="hidden" id="editId">
+
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label>Kode Barang</label>
+
+                        <input
+                            type="text"
+                            id="kodeBarang"
+                            placeholder="Contoh: B001"
+                            required
+                        >
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Nama Barang</label>
+
+                        <input
+                            type="text"
+                            id="namaBarang"
+                            placeholder="Contoh: Pulpen"
+                            required
+                        >
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Kategori</label>
+
+                        <input
+                            type="text"
+                            id="kategoriBarang"
+                            placeholder="Contoh: ATK"
+                            required
+                        >
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Satuan</label>
+
+                        <select id="satuanBarang" required>
+                            <option value="">Pilih satuan</option>
+                            <option value="pcs">Pcs</option>
+                            <option value="unit">Unit</option>
+                            <option value="box">Box</option>
+                            <option value="kg">Kg</option>
+                            <option value="liter">Liter</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Harga</label>
+
+                        <input
+                            type="number"
+                            id="hargaBarang"
+                            placeholder="0"
+                            min="0"
+                            required
+                        >
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Stok Awal</label>
+
+                        <input
+                            type="number"
+                            id="stokBarang"
+                            placeholder="0"
+                            min="0"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="secondary-button"
+                        onclick="closeModal()">
+                        Batal
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="primary-button">
+                        Simpan Barang
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         MODAL TRANSAKSI
+    ========================== -->
+    <div id="transactionModal" class="modal">
+
+        <div class="modal-content small-modal">
+
+            <div class="modal-header">
+
+                <div>
+                    <span class="section-tag" id="transactionTag">
+                        TRANSACTION
+                    </span>
+
+                    <h2 id="transactionTitle">
+                        Barang Masuk
+                    </h2>
+                </div>
+
+                <button
+                    class="close-button"
+                    onclick="closeTransactionModal()">
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="transactionForm">
+
+                <input type="hidden" id="transactionType">
+
+
+                <div class="form-group">
+
+                    <label>Pilih Barang</label>
+
+                    <select id="transactionBarang" required>
+                        <option value="">
+                            Pilih barang
+                        </option>
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Jumlah</label>
+
+                    <input
+                        type="number"
+                        id="transactionJumlah"
+                        min="1"
+                        placeholder="Masukkan jumlah"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Keterangan</label>
+
+                    <input
+                        type="text"
+                        id="transactionKeterangan"
+                        placeholder="Contoh: Pembelian supplier"
+                    >
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="secondary-button"
+                        onclick="closeTransactionModal()">
+                        Batal
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="primary-button">
+                        Simpan Transaksi
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- TOAST -->
+    <div id="toast" class="toast">
+        <span id="toastIcon">✓</span>
+        <span id="toastMessage">Berhasil</span>
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
